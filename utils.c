@@ -6,30 +6,11 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 12:20:51 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/20 14:42:14 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:19:40 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int	revstrncmp(char *compare, char *argv, int n)
-{
-	int	i;
-	int	ii;
-
-	if (n == 0)
-		return (0);
-	i = 0;
-	ii = 0;
-	while (argv[i])
-		i++;
-	while (compare[ii])
-		ii++;
-	while (n--)
-		if (argv[i--] != compare[ii--])
-			return (1);
-	return (0);
-}
 
 size_t	ft_strlen(const char *str)
 {

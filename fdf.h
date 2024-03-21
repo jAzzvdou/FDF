@@ -6,7 +6,7 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:29:55 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/20 16:53:11 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:47:17 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,30 @@
 # include <math.h>   // SIN, COS, TAN...
 
 //----------MAP STRUCT----------//
-typedef struct s_coords
+typedef struct s_pixel
 {
 	double	x;
 	double	y;
 	double	z;
 	int	rgb[3];
-}	t_coords;
+}	t_pixel;
 
 //----------MAIN STRUCT----------//
 typedef struct s_fdf
 {
-	int		width;   // -> Largura.
-	int		height;  // -> Altura.
-	void		*mlx;    // -> Conexão com a MLX(???).
-	void		*window; // -> Janela(???).
-	int		*map;    // -> Pontos do mapa (Matriz).
+	int	width;  // -> Largura;
+	int	height; // -> Altura;
+	t_pixel	*pixel;  // -> Pontos do mapa.
 }	t_fdf;
 
 //----------FDF----------//
+
+//----------MAP UTILS----------//
 char	*get_next_line(int fd);
+int	revstrncmp(char *compare, char *argv, int n);
+int	map_size(int fd);
 
 //----------UTILS----------//
-int	revstrncmp(char *compare, char *argv, int n);
 size_t	ft_strlen(const char *str);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);

@@ -6,78 +6,55 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:33:34 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/20 23:02:33 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:48:12 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include "stdio.h"
 
-int	count_spaces(char *line)
+int	get_width(char *file)
 {
-	int	i;
-	int	spaces;
+	int	fd;
+	int	width;
+	char	*line;
+	char	**map;
 
-	spaces = 0;
-	i = -1;
-	while (line[++i])
-		if (line[i] == ' ')
-			spaces++;
-	return (spaces);
+	fd = open(file, O_RDONLY);
+	line = get_next_line(fd);
+	map = ft_split(line, ' ');
+	free(line);
+	close(fd);
+	width = 0;
+	while (map[width])
+		width++;
+	return (width);
 }
 
-int	map_size(int fd)
+int	get_height(char *file)
 {
-	int	i;
-	int	spaces;
+	int	fd;
+	int	height;
 	char	*line;
 
-	line = get_next_line(fd);
-	spaces = count_spaces(line);
-	free(line);
-	line = get_next_line(fd);
-	i = count_spaces(line);
-	if (spaces != i)
-		return (0);
-	while (line)
+	fd = open(file, O_RDONLY);
+	height = 0;
+	while (1)
 	{
-		spaces = count_spaces(line);
-		free(line);
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		i = count_spaces(line);
-		if (spaces != i)
-			return (0);
-	}
-	close(fd);
-	return (1);
-}
-
-t_coords	read_map(char *file)
-{
-	int	fd;
-	char	*line;
-	t_coords	map;
-
-	fd = open(file, O_RDONLY);
-	map = (t_coords){0};
-	map.x = 0;
-	map.y = 0;
-	line = get_next_line(fd);
-	while (line)
-	{
-		map.y++;
 		free(line);
-		line = get_next_line(fd);
+		height++;
 	}
 	close(fd);
-	fd = open(file, O_RDONLY);
-	line = get_next_line(fd);
-	map.x = count_spaces(line) + 1;
-	free(line);
-	close(fd);
-	return (map);
+	return (height);
+}	
+
+void	start_fdf(t_fdf *fdf, char *file)
+{
+	fdf->width = get_width(file);
+	fdf->height = get_height(file);
 }
 
 int	main(int argc, char **argv)
@@ -93,12 +70,9 @@ int	main(int argc, char **argv)
 		return (write(2, "Error! Invalid File.\n", 21));
 	if (!map_size(fd))
 		return (write(2, "Error! Invalid Map Size.\n", 25));
-	// Now I need to read the map and put de coords in a 2D array.
-	fdf.map = read_map(argv[1]);
-	// Then I need to get the max and min values of the map.
-	// Then I need to convert the 2D array to a 3D.
-	// Then I need to draw the map.
-	// Then I need to handle the events.
-	// Then I need to free the memory.
+	start_fdf(&fdf, argv[1]);
+	printf("Largura do Mapa: %d.\n", fdf.width);
+	printf("Altura do Mapa: %d.\n", fdf.height);
+
 	return (0);
 }
