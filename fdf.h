@@ -30,9 +30,9 @@ typedef struct s_pixel
 //----------MAIN STRUCT----------//
 typedef struct s_fdf
 {
-	int	width;  // -> Largura;
-	int	height; // -> Altura;
-	t_pixel	*pixel;  // -> Pontos do mapa.
+	int	width;   // -> Largura;
+	int	height;  // -> Altura;
+	int	**pixel; // -> Pontos do mapa.
 }	t_fdf;
 
 //----------FDF----------//
@@ -44,6 +44,7 @@ int	map_size(int fd);
 
 //----------UTILS----------//
 size_t	ft_strlen(const char *str);
+int	ft_atoi(const char *nptr);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
 char	*ft_strjoin(char *s1, char *s2);

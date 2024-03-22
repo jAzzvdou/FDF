@@ -31,42 +31,24 @@ int	revstrncmp(char *compare, char *argv, int n)
 	return (0);
 }
 
-int	count_spaces(char *line)
-{
-	int	i;
-	int	spaces;
-
-	spaces = 0;
-	i = -1;
-	while (line[++i])
-		if (line[i] == ' ')
-			spaces++;
-	return (spaces);
-}
-
-// MUDAR ESSA FUNÇÃO! DÁ PRA DEIXAR MELHOR.
 int	map_size(int fd)
 {
-	int	i;
-	int	spaces;
+	int	size_l1;
+	int	size_l2;
 	char	*line;
 
-	line = get_next_line(fd);
-	spaces = count_spaces(line);
-	free(line);
-	line = get_next_line(fd);
-	i = count_spaces(line);
-	if (spaces != i)
-		return (0);
-	while (line)
+	while (1)
 	{
-		spaces = count_spaces(line);
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		size_l1 = ft_strlen(line);
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		i = count_spaces(line);
-		if (spaces != i)
+		size_l2 = ft_strlen(line);
+		if (size_l1 != size_l2)
 			return (0);
 	}
 	close(fd);
