@@ -21,9 +21,7 @@
 //----------MAP STRUCT----------//
 typedef struct s_pixel
 {
-	double	x;
-	double	y;
-	double	z;
+	int	z;
 	int	rgb[3];
 }	t_pixel;
 
@@ -32,10 +30,14 @@ typedef struct s_fdf
 {
 	int	width;   // -> Largura;
 	int	height;  // -> Altura;
-	int	**pixel; // -> Pontos do mapa.
+	int	**pixel[2]; // -> Pontos do mapa.
+	int	**colors;
+	void	*mlx;    // -> Inicializar a LibX.
+	void	*window; // -> Abrir a janela.
 }	t_fdf;
 
 //----------FDF----------//
+int     **get_coords(char *file, int width, int height);
 
 //----------MAP UTILS----------//
 char	*get_next_line(int fd);

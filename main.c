@@ -49,60 +49,52 @@ int	get_height(char *file)
 	}
 	close(fd);
 	return (height);
-}	
+}
 
-int	**read_map(char *file, int width, int height)
+int	color(int z, int zmin, int zmax)
 {
-	int	x;
+	float	calc;
+
+	calc = (float)(z - zmin) / (zmax - zmin);
+
+	int red = 255 * calc;
+	int green = 0;
+	int blue = 255 * (1 - calc);
+
+	int color = (red << 16) | (green << 8) | blue;
+	return (color);
+}
+
+int	**get_color(int	**pixel, int zmin, int zmax)
+{
 	int	y;
-	int	**pixel;
+	int	x;
 
-	pixel = (int**)malloc(sizeof(int) * height);
-	if (!pixel)
-		return (NULL);
-
-	int i = 0;
-	while (i < height)
+	i = 0;
+	while (pixel[y])
 	{
-		pixel[i] = (int*)malloc(sizeof(int) * width);
-		if (!pixel[i])
+		ii = 0;
+		while (pixel[y][x])
 		{
-			int ii = 0;
-			while (ii < i)
-			{
-				free(pixel[ii]);
-				ii++;
-			}
-			free(pixel);
-		}
-		i++;
-	}
-
-	int fd = open(file, O_RDONLY);
-	y = 0;
-	while (y < height)
-	{
-		char *line = get_next_line(fd);
-		char **split = ft_split(line, ' ');
-		free(line);
-		x = 0;
-		while (x < width)
-		{
-			pixel[y][x] = ft_atoi(split[x]);
+			pixel[y][x][1] = color(pixel[y][x], zmin, zmax);
 			x++;
 		}
-		free(split);
 		y++;
 	}
-	close(fd);
 	return (pixel);
 }
 
 void	start_fdf(t_fdf *fdf, char *file)
 {
+	int	zmax;
+	int	zmin;
+
 	fdf->width = get_width(file);
 	fdf->height = get_height(file);
-	fdf->pixel = read_map(file, fdf->width, fdf->height);
+	fdf->pixel = get_coords(file, fdf->width, fdf->height);
+	zmax = biggest_z(fdf->pixel);
+	zmin = smallest_z(fdf->pixel);
+	fdf->pixel = get_color(fdf->pixel, zmin, zmax);
 }
 
 int	main(int argc, char **argv)
