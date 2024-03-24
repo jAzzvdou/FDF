@@ -30,8 +30,8 @@ typedef struct s_fdf
 {
 	int	width;   // -> Largura;
 	int	height;  // -> Altura;
-	int	**pixel[2]; // -> Pontos do mapa.
-	int	**colors;
+	int	**pixel; // -> Pontos do mapa.
+	int	**color; // -> Cores dos pixels.
 	void	*mlx;    // -> Inicializar a LibX.
 	void	*window; // -> Abrir a janela.
 }	t_fdf;

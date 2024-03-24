@@ -37,7 +37,7 @@ int     **get_coords(char *file, int width, int height)
                 x = 0;
                 while (x < width)
                 {
-                        pixel[y][x][0] = ft_atoi(split[x]); // Pega o Z.
+                        pixel[y][x] = ft_atoi(split[x]); // Pega o Z.
                         x++;
                 }
                 free(split);
