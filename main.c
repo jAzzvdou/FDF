@@ -6,7 +6,7 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:33:34 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/21 17:48:12 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:54:48 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,18 +160,6 @@ void	start_fdf(t_fdf *fdf, char *file)
 	zmax = biggest_z(fdf, fdf->pixel);
 	zmin = smallest_z(fdf, fdf->pixel);
 	fdf->color = get_color(fdf, fdf->pixel, zmin, zmax);
-	int y = 0;
-	while (y < fdf->height)
-	{
-		int x = 0;
-		while (x < fdf->width)
-		{
-			printf("z: %d.\n", fdf->pixel[y][x]);
-			printf("color: %d.\n", fdf->color[y][x]);
-			x++;
-		}
-		y++;
-	}
 }
 
 int	main(int argc, char **argv)
@@ -191,5 +179,18 @@ int	main(int argc, char **argv)
 		return (write(2, "Error! Invalid Map Size.\n", 25));
 	start_fdf(&fdf, argv[1]);
 
+	// TESTE
+	fdf.mlx = mlx_init();
+	fdf.window = mlx_new_window(fdf.mlx, 1000, 1000, "Test");
+	int x = 0;
+	int y = 0;
+	while (x <= 1000 || y <= 1000)
+	{
+		mlx_pixel_put(fdf.mlx, fdf.window, x, y, fdf.color[1][1]);
+		x++;
+		y++;
+	}
+	// FAZER O ALGORITMO DA RETA
+	mlx_loop(fdf.mlx);
 	return (0);
 }

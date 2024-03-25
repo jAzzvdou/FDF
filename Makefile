@@ -17,12 +17,14 @@ CC	=	cc
 
 CFLAGS	=	-g -Wall -Werror -Wextra
 
-RM	=	rm -rf 
+RM	=	rm -rf
+
+MLX	=	minilibx-linux/libmlx.a
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) -o $(NAME) $(OBJS)
+		$(CC) $(SRCS) $(MLX) -o $(NAME) -Imlx_linux -lXext -lX11 -lm
 
 .c.o:
 		$(CC) $(CFLAGS) -c $<
