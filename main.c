@@ -6,7 +6,7 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:33:34 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/25 17:54:48 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:55:12 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,37 @@ int	smallest_z(t_fdf *fdf, int **pixel)
 	return (smallest);
 }
 
+//----------TESTE----------//
+
+void put_pixel(t_fdf *fdf, int x, int y)
+{
+	mlx_pixel_put(fdf->mlx, fdf->window, x, y, 255);
+}
+
+void draw_line(t_fdf *fdf, int x1, int y1, int x2, int y2)
+{
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int sx = x1 < x2 ? 1 : -1;
+    int sy = y1 < y2 ? 1 : -1;
+    int err = dx - dy;
+
+    while (x1 != x2 || y1 != y2) {
+        put_pixel(fdf, x1, y1);
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+        }
+    }
+}
+
+//--------------------//
+
 void	start_fdf(t_fdf *fdf, char *file)
 {
 	int	zmax;
@@ -161,6 +192,7 @@ void	start_fdf(t_fdf *fdf, char *file)
 	zmin = smallest_z(fdf, fdf->pixel);
 	fdf->color = get_color(fdf, fdf->pixel, zmin, zmax);
 }
+
 
 int	main(int argc, char **argv)
 {
@@ -182,15 +214,8 @@ int	main(int argc, char **argv)
 	// TESTE
 	fdf.mlx = mlx_init();
 	fdf.window = mlx_new_window(fdf.mlx, 1000, 1000, "Test");
-	int x = 0;
-	int y = 0;
-	while (x <= 1000 || y <= 1000)
-	{
-		mlx_pixel_put(fdf.mlx, fdf.window, x, y, fdf.color[1][1]);
-		x++;
-		y++;
-	}
-	// FAZER O ALGORITMO DA RETA
+
+	draw_line(&fdf, 0, 0, 1000, 500);
 	mlx_loop(fdf.mlx);
 	return (0);
 }
