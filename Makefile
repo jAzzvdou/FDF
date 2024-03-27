@@ -4,6 +4,7 @@ SRCS	=	main.c          \
 		verify_map.c    \
 		map.c           \
 		get_next_line.c \
+		draw.c          \
 		utils.c         \
 		utils2.c
 

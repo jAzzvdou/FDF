@@ -6,7 +6,7 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:33:34 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/27 08:20:45 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:33:37 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,53 +150,6 @@ int	smallest_z(t_fdf *fdf, int **file)
 	return (smallest);
 }
 
-//----------| TESTE |----------//
-
-void	wu(t_fdf *fdf, int x1, int y1, int x2, int y2)
-{
-	int dx = abs(x2 - x1);
-	int dy = abs(y2 - y1);
-	int steep = dy > dx;
-
-	if (steep)
-	{
-		int temp = x1;
-		x1 = y1;
-		y1 = temp;
-		temp = x2;
-		x2 = y2;
-		y2 = temp;
-	}
-	if (x1 > x2)
-	{
-		int temp = x1;
-		x1 = x2;
-		x2 = temp;
-		temp = y1;
-		y1 = y2;
-		y2 = temp;
-	}
-	float gradient = (float)(y2 - y1) / (x2 - x1);
-	float y = y1 + gradient;
-	float ystep = gradient;
-	for (int x = x1 + 1; x < x2; x++)
-	{
-		if (steep)
-		{
-			mlx_pixel_put(fdf->mlx, fdf->window, (int)y, x, 255);
-			mlx_pixel_put(fdf->mlx, fdf->window, (int)y + 1, x, 255);
-		}
-		else
-		{
-			mlx_pixel_put(fdf->mlx, fdf->window, x, (int)y, 255);
-			mlx_pixel_put(fdf->mlx, fdf->window, x, (int)y + 1, 255);
-		}
-		y += ystep;
-	}
-}
-
-//--------------------//
-
 void	start_fdf(t_fdf *fdf, char *argv1)
 {
 	int	zmax;
@@ -209,7 +162,6 @@ void	start_fdf(t_fdf *fdf, char *argv1)
 	zmin = smallest_z(fdf, fdf->file);
 	fdf->color = get_color(fdf, fdf->file, zmin, zmax);
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -229,8 +181,35 @@ int	main(int argc, char **argv)
 	start_fdf(&fdf, argv[1]);
 
 	fdf.mlx = mlx_init();
-	fdf.window = mlx_new_window(fdf.mlx, 1000, 1000, "Test");
-	wu(&fdf, 0, 0, 1000, 200);
+	fdf.window = mlx_new_window(fdf.mlx, WIDTH, HEIGHT, "MY FDF!");
+
+//----------| TESTES |----------//
+
+	int x = 10;
+	int y = 10;
+	int side = 100;
+
+	int down = 9;
+	int right = 18;
+	int i = 0;
+	while (i++ < down)
+	{
+		int ii = 0;
+		while (ii++ < right)
+		{
+			wu(&fdf, x, y, x + side, y);
+			wu(&fdf, x + side, y, x + side, y + side);
+			wu(&fdf, x + side, y + side, x, y + side);
+			wu(&fdf, x, y + side, x, y);
+			x = x + side;
+		}
+		x = 10;
+		y = y + side;
+	}
+
+//--------------------//
+
 	mlx_loop(fdf.mlx);
+
 	return (0);
 }

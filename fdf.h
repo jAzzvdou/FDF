@@ -6,12 +6,15 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:29:55 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/27 08:08:26 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:33:54 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
+
+# define WIDTH 1920
+# define HEIGHT 1080
 
 # include "./minilibx-linux/mlx.h" //| MiniLibX
 # include <unistd.h>               //| WRITE, READ
@@ -32,6 +35,7 @@ typedef struct s_fdf
 
 //----------| FDF |----------//
 int     **get_zcoord(char *file, int width, int height);
+void	wu(t_fdf *fdf, int x1, int y1, int x2, int y2);
 
 //----------| MAP UTILS |----------//
 char	*get_next_line(int fd);
