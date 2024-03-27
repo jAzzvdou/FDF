@@ -6,21 +6,22 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:33:34 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/26 18:55:12 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/27 08:20:45 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
 #include "stdio.h"
 
-int	get_width(char *file)
+int	get_width(char *argv1)
 {
 	int	fd;
 	int	width;
 	char	*line;
 	char	**map;
 
-	fd = open(file, O_RDONLY);
+	fd = open(argv1, O_RDONLY);
 	line = get_next_line(fd);
 	map = ft_split(line, ' ');
 	free(line);
@@ -31,13 +32,13 @@ int	get_width(char *file)
 	return (width);
 }
 
-int	get_height(char *file)
+int	get_height(char *argv1)
 {
 	int	fd;
 	int	height;
 	char	*line;
 
-	fd = open(file, O_RDONLY);
+	fd = open(argv1, O_RDONLY);
 	height = 0;
 	while (1)
 	{
@@ -65,7 +66,7 @@ int	paint_z(int z, int zmin, int zmax)
 	return (color);
 }
 
-int	**get_color(t_fdf *fdf, int **pixel, int zmin, int zmax)
+int	**get_color(t_fdf *fdf, int **file, int zmin, int zmax)
 {
         int     x;
         int     y;
@@ -97,7 +98,7 @@ int	**get_color(t_fdf *fdf, int **pixel, int zmin, int zmax)
 		x = 0;
 		while (x < fdf->width)
 		{
-			color[y][x] = paint_z(pixel[y][x], zmin, zmax);
+			color[y][x] = paint_z(file[y][x], zmin, zmax);
 			x++;
 		}
 		y++;
@@ -105,7 +106,7 @@ int	**get_color(t_fdf *fdf, int **pixel, int zmin, int zmax)
 	return (color);
 }
 
-int	biggest_z(t_fdf *fdf, int **pixel)
+int	biggest_z(t_fdf *fdf, int **file)
 {
 	int	y;
 	int	x;
@@ -118,8 +119,8 @@ int	biggest_z(t_fdf *fdf, int **pixel)
 		x = 0;
 		while (x < fdf->width)
 		{
-			if (pixel[y][x] > biggest)
-				biggest = pixel[y][x];
+			if (file[y][x] > biggest)
+				biggest = file[y][x];
 			x++;
 		}
 		y++;
@@ -127,7 +128,7 @@ int	biggest_z(t_fdf *fdf, int **pixel)
 	return (biggest);
 }
 
-int	smallest_z(t_fdf *fdf, int **pixel)
+int	smallest_z(t_fdf *fdf, int **file)
 {
 	int	y;
 	int	x;
@@ -140,8 +141,8 @@ int	smallest_z(t_fdf *fdf, int **pixel)
 		x = 0;
 		while (x < fdf->width)
 		{
-			if (pixel[y][x] < smallest)
-				smallest = pixel[y][x];
+			if (file[y][x] < smallest)
+				smallest = file[y][x];
 			x++;
 		}
 		y++;
@@ -149,48 +150,64 @@ int	smallest_z(t_fdf *fdf, int **pixel)
 	return (smallest);
 }
 
-//----------TESTE----------//
+//----------| TESTE |----------//
 
-void put_pixel(t_fdf *fdf, int x, int y)
+void	wu(t_fdf *fdf, int x1, int y1, int x2, int y2)
 {
-	mlx_pixel_put(fdf->mlx, fdf->window, x, y, 255);
-}
+	int dx = abs(x2 - x1);
+	int dy = abs(y2 - y1);
+	int steep = dy > dx;
 
-void draw_line(t_fdf *fdf, int x1, int y1, int x2, int y2)
-{
-    int dx = abs(x2 - x1);
-    int dy = abs(y2 - y1);
-    int sx = x1 < x2 ? 1 : -1;
-    int sy = y1 < y2 ? 1 : -1;
-    int err = dx - dy;
-
-    while (x1 != x2 || y1 != y2) {
-        put_pixel(fdf, x1, y1);
-        int e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            x1 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y1 += sy;
-        }
-    }
+	if (steep)
+	{
+		int temp = x1;
+		x1 = y1;
+		y1 = temp;
+		temp = x2;
+		x2 = y2;
+		y2 = temp;
+	}
+	if (x1 > x2)
+	{
+		int temp = x1;
+		x1 = x2;
+		x2 = temp;
+		temp = y1;
+		y1 = y2;
+		y2 = temp;
+	}
+	float gradient = (float)(y2 - y1) / (x2 - x1);
+	float y = y1 + gradient;
+	float ystep = gradient;
+	for (int x = x1 + 1; x < x2; x++)
+	{
+		if (steep)
+		{
+			mlx_pixel_put(fdf->mlx, fdf->window, (int)y, x, 255);
+			mlx_pixel_put(fdf->mlx, fdf->window, (int)y + 1, x, 255);
+		}
+		else
+		{
+			mlx_pixel_put(fdf->mlx, fdf->window, x, (int)y, 255);
+			mlx_pixel_put(fdf->mlx, fdf->window, x, (int)y + 1, 255);
+		}
+		y += ystep;
+	}
 }
 
 //--------------------//
 
-void	start_fdf(t_fdf *fdf, char *file)
+void	start_fdf(t_fdf *fdf, char *argv1)
 {
 	int	zmax;
 	int	zmin;
 
-	fdf->width = get_width(file);
-	fdf->height = get_height(file);
-	fdf->pixel = get_coords(file, fdf->width, fdf->height);
-	zmax = biggest_z(fdf, fdf->pixel);
-	zmin = smallest_z(fdf, fdf->pixel);
-	fdf->color = get_color(fdf, fdf->pixel, zmin, zmax);
+	fdf->width = get_width(argv1);
+	fdf->height = get_height(argv1);
+	fdf->file = get_zcoord(argv1, fdf->width, fdf->height);
+	zmax = biggest_z(fdf, fdf->file);
+	zmin = smallest_z(fdf, fdf->file);
+	fdf->color = get_color(fdf, fdf->file, zmin, zmax);
 }
 
 
@@ -211,11 +228,9 @@ int	main(int argc, char **argv)
 		return (write(2, "Error! Invalid Map Size.\n", 25));
 	start_fdf(&fdf, argv[1]);
 
-	// TESTE
 	fdf.mlx = mlx_init();
 	fdf.window = mlx_new_window(fdf.mlx, 1000, 1000, "Test");
-
-	draw_line(&fdf, 0, 0, 1000, 500);
+	wu(&fdf, 0, 0, 1000, 200);
 	mlx_loop(fdf.mlx);
 	return (0);
 }

@@ -6,46 +6,39 @@
 /*   By: jazevedo <jazevedo@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:29:55 by jazevedo          #+#    #+#             */
-/*   Updated: 2024/03/25 17:10:17 by jazevedo         ###   ########.fr       */
+/*   Updated: 2024/03/27 08:08:26 by jazevedo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# include "./minilibx-linux/mlx.h"
-# include <unistd.h> // WRITE, READ
-# include <stdlib.h> // MALLOC, FREE, NULL
-# include <fcntl.h>  // OPEN, CLOSE
-# include <math.h>   // SIN, COS, TAN...
-		     //
-//----------MAP STRUCT----------//
-typedef struct s_pixel
-{
-	int	z;
-	int	rgb[3];
-}	t_pixel;
+# include "./minilibx-linux/mlx.h" //| MiniLibX
+# include <unistd.h>               //| WRITE, READ
+# include <stdlib.h>               //| MALLOC, FREE, NULL
+# include <fcntl.h>                //| OPEN, CLOSE
+# include <math.h>                 //| SIN, COS, TAN...
 
-//----------MAIN STRUCT----------//
+//----------| MAIN STRUCT |----------//
 typedef struct s_fdf
 {
-	int	width;   // -> Largura;
-	int	height;  // -> Altura;
-	int	**pixel; // -> Pontos do mapa.
-	int	**color; // -> Cores dos pixels.
-	void	*mlx;    // -> Inicializar a LibX.
-	void	*window; // -> Abrir a janela.
+	int	width;   //| Largura;
+	int	height;  //| Altura;
+	int	**file;  //| Pontos do mapa.
+	int	**color; //| Cores dos pixels.
+	void	*mlx;    //| Inicializar a LibX.
+	void	*window; //| Abrir a janela.
 }	t_fdf;
 
-//----------FDF----------//
-int     **get_coords(char *file, int width, int height);
+//----------| FDF |----------//
+int     **get_zcoord(char *file, int width, int height);
 
-//----------MAP UTILS----------//
+//----------| MAP UTILS |----------//
 char	*get_next_line(int fd);
 int	revstrncmp(char *compare, char *argv, int n);
 int	map_size(int fd);
 
-//----------UTILS----------//
+//----------| UTILS |----------//
 size_t	ft_strlen(const char *str);
 int	ft_atoi(const char *nptr);
 char	*ft_strchr(const char *s, int c);
